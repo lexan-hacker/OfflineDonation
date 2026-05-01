@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KindleGive - Donation Crowdfunding Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Demo Notice Banner -->
+    <div class="demo-notice">
+        <i class="fas fa-info-circle"></i>
+        <span><strong>Demo Mode:</strong> All data is stored locally in your browser. No real payments are processed.</span>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#home" class="logo">
+                <i class="fas fa-heart"></i> KindleGive
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#browse">Browse</a></li>
+                <li id="navCreateCampaign" class="hide"><a href="#create-campaign">Create Campaign</a></li>
+                <li id="navProfile" class="hide"><a href="#profile">Profile</a></li>
+                <li id="navAdmin" class="hide"><a href="#admin">Admin</a></li>
+                <li id="navLogin"><a href="#login">Login</a></li>
+                <li id="navRegister"><a href="#register">Register</a></li>
+                <li id="navLogout" class="hide"><a href="#" id="logoutBtn">Logout</a></li>
+            </ul>
+            <div class="nav-right">
+                <button class="notification-btn" id="notificationBtn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge hide" id="notificationBadge">0</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Notification Dropdown -->
+    <div class="notification-dropdown hide" id="notificationDropdown">
+        <div class="notification-header">
+            <h3>Notifications</h3>
+            <button class="mark-all-read" id="markAllReadBtn">Mark all read</button>
+        </div>
+        <div class="notification-list" id="notificationList">
+            <p class="no-notifications">No notifications</p>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- Home Page -->
+        <section id="home-page" class="page active">
+            <div class="hero">
+                <h1>Make a Difference Today</h1>
+                <p>Support causes you care about and help people in need</p>
+                <a href="#browse" class="btn btn-primary">Browse Campaigns</a>
+            </div>
+            
+            <div class="container">
+                <h2 class="section-title">Featured Campaigns</h2>
+                <div class="campaign-grid" id="featuredCampaigns"></div>
+                
+                <h2 class="section-title">Latest Campaigns</h2>
+                <div class="campaign-grid" id="latestCampaigns"></div>
+            </div>
+        </section>
+
+        <!-- Browse Page -->
+        <section id="browse-page" class="page">
+            <div class="container">
+                <h2 class="section-title">Browse Campaigns</h2>
+                <div class="filters">
+                    <input type="text" id="searchInput" placeholder="Search campaigns..." class="search-input">
+                    <select id="categoryFilter" class="filter-select">
+                        <option value="">All Categories</option>
+                        <option value="medical">Medical</option>
+                        <option value="education">Education</option>
+                        <option value="personal">Personal</option>
+                        <option value="emergency">Emergency</option>
+                        <option value="community">Community</option>
+                        <option value="environment">Environment</option>
+                        <option value="animals">Animals</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <select id="statusFilter" class="filter-select">
+                        <option value="">All Status</option>
+                        <option value="live">Live</option>
+                        <option value="closed">Closed</option>
+                    </select>
+                    <select id="sortFilter" class="filter-select">
+                        <option value="newest">Newest First</option>
+                        <option value="funded">Most Funded</option>
+                        <option value="deadline">Soonest Deadline</option>
+                    </select>
+                </div>
+                <div class="campaign-grid" id="browseCampaigns"></div>
+            </div>
+        </section>
+
+        <!-- Campaign Detail Page -->
+        <section id="campaign-detail-page" class="page">
+            <div class="container">
+                <button class="back-btn" onclick="window.history.back()">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+                <div class="campaign-detail" id="campaignDetail"></div>
+            </div>
+        </section>
+
+        <!-- Create Campaign Page -->
+        <section id="create-campaign-page" class="page">
+            <div class="container">
+                <h2 class="section-title">Create New Campaign</h2>
+                <form id="createCampaignForm" class="form">
+                    <div class="form-group">
+                        <label for="campaignTitle">Title *</label>
+                        <input type="text" id="campaignTitle" maxlength="100" required>
+                        <small>Max 100 characters</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="campaignShortDesc">Short Description *</label>
+                        <textarea id="campaignShortDesc" maxlength="200" rows="2" required></textarea>
+                        <small>Max 200 characters</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="campaignFullDesc">Full Story *</label>
+                        <textarea id="campaignFullDesc" rows="6" required></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="campaignGoal">Goal Amount ($) *</label>
+                            <input type="number" id="campaignGoal" min="10" required>
+                            <small>Minimum $10</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="campaignDeadline">Deadline *</label>
+                            <input type="date" id="campaignDeadline" required>
+                            <small>7-365 days from today</small>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="campaignCategory">Category *</label>
+                            <select id="campaignCategory" required>
+                                <option value="">Select Category</option>
+                                <option value="medical">Medical</option>
+                                <option value="education">Education</option>
+                                <option value="personal">Personal</option>
+                                <option value="emergency">Emergency</option>
+                                <option value="community">Community</option>
+                                <option value="environment">Environment</option>
+                                <option value="animals">Animals</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="campaignLocation">Location *</label>
+                            <input type="text" id="campaignLocation" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="campaignCoverImage">Cover Image URL</label>
+                        <input type="url" id="campaignCoverImage" placeholder="https://example.com/image.jpg">
+                        <small>Optional: URL to a public image</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Submit Campaign for Approval</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Edit Campaign Page -->
+        <section id="edit-campaign-page" class="page">
+            <div class="container">
+                <h2 class="section-title">Edit Campaign</h2>
+                <form id="editCampaignForm" class="form">
+                    <input type="hidden" id="editCampaignId">
+                    <div class="form-group">
+                        <label for="editCampaignTitle">Title</label>
+                        <input type="text" id="editCampaignTitle" maxlength="100" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="editCampaignShortDesc">Short Description</label>
+                        <textarea id="editCampaignShortDesc" maxlength="200" rows="2" disabled></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="editCampaignFullDesc">Full Story</label>
+                        <textarea id="editCampaignFullDesc" rows="6"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editCampaignGoal">Goal Amount ($)</label>
+                            <input type="number" id="editCampaignGoal" min="10" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="editCampaignDeadline">Deadline</label>
+                            <input type="date" id="editCampaignDeadline" disabled>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editCampaignCategory">Category</label>
+                            <select id="editCampaignCategory" disabled>
+                                <option value="medical">Medical</option>
+                                <option value="education">Education</option>
+                                <option value="personal">Personal</option>
+                                <option value="emergency">Emergency</option>
+                                <option value="community">Community</option>
+                                <option value="environment">Environment</option>
+                                <option value="animals">Animals</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editCampaignLocation">Location</label>
+                            <input type="text" id="editCampaignLocation" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editCampaignCoverImage">Cover Image URL</label>
+                        <input type="url" id="editCampaignCoverImage">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Save Changes</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Profile Page -->
+        <section id="profile-page" class="page">
+            <div class="container">
+                <h2 class="section-title">My Profile</h2>
+                <div class="profile-info" id="profileInfo"></div>
+                
+                <h3 class="subsection-title">My Campaigns</h3>
+                <div class="campaign-list" id="myCampaigns"></div>
+                
+                <h3 class="subsection-title">My Donations</h3>
+                <div class="donation-list" id="myDonations"></div>
+            </div>
+        </section>
+
+        <!-- Admin Panel -->
+        <section id="admin-page" class="page">
+            <div class="container">
+                <h2 class="section-title">Admin Panel</h2>
+                
+                <div class="admin-stats" id="adminStats"></div>
+                
+                <div class="admin-tabs">
+                    <button class="admin-tab active" data-tab="campaigns">Campaigns</button>
+                    <button class="admin-tab" data-tab="withdrawals">Withdrawals</button>
+                    <button class="admin-tab" data-tab="users">Users</button>
+                </div>
+                
+                <div class="admin-tab-content active" id="adminCampaignsTab">
+                    <h3>Manage Campaigns</h3>
+                    <div class="admin-filters">
+                        <select id="adminCampaignStatusFilter" class="filter-select">
+                            <option value="all">All</option>
+                            <option value="pending">Pending</option>
+                            <option value="live">Live</option>
+                            <option value="closed">Closed</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                    <div class="admin-table-wrapper">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Creator</th>
+                                    <th>Goal</th>
+                                    <th>Raised</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminCampaignsTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="admin-tab-content" id="adminWithdrawalsTab">
+                    <h3>Withdrawal Requests</h3>
+                    <div class="admin-table-wrapper">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Campaign</th>
+                                    <th>Creator</th>
+                                    <th>Amount</th>
+                                    <th>Requested</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminWithdrawalsTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="admin-tab-content" id="adminUsersTab">
+                    <h3>Manage Users</h3>
+                    <div class="admin-table-wrapper">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Joined</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminUsersTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Login Page -->
+        <section id="login-page" class="page">
+            <div class="auth-container">
+                <h2>Login</h2>
+                <form id="loginForm" class="form auth-form">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                </form>
+                <p class="auth-switch">Don't have an account? <a href="#register">Register</a></p>
+            </div>
+        </section>
+
+        <!-- Register Page -->
+        <section id="register-page" class="page">
+            <div class="auth-container">
+                <h2>Register</h2>
+                <form id="registerForm" class="form auth-form">
+                    <div class="form-group">
+                        <label for="registerName">Full Name</label>
+                        <input type="text" id="registerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Password</label>
+                        <input type="password" id="registerPassword" minlength="4" required>
+                        <small>Minimum 4 characters (demo only)</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Register</button>
+                </form>
+                <p class="auth-switch">Already have an account? <a href="#login">Login</a></p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Donation Modal -->
+    <div class="modal hide" id="donationModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="closeDonationModal">&times;</button>
+            <h3>Make a Donation</h3>
+            <div id="donationCampaignInfo"></div>
+            <form id="donationForm" class="form">
+                <input type="hidden" id="donationCampaignId">
+                <div class="form-group">
+                    <label for="donationAmount">Amount ($) *</label>
+                    <input type="number" id="donationAmount" min="5" required>
+                    <small>Minimum $5</small>
+                </div>
+                <div class="form-group">
+                    <label for="donationMessage">Message (optional)</label>
+                    <textarea id="donationMessage" rows="3"></textarea>
+                </div>
+                <div class="form-group checkbox-group">
+                    <label>
+                        <input type="checkbox" id="donationAnonymous">
+                        Donate anonymously
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Donate Now</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Payment Confirmation Modal -->
+    <div class="modal hide" id="paymentModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content modal-small">
+            <h3>Confirm Payment</h3>
+            <div class="payment-confirm">
+                <p>You are about to make a mock payment of:</p>
+                <p class="payment-amount" id="paymentAmountDisplay">$0</p>
+                <p class="payment-note"><i class="fas fa-info-circle"></i> This is a simulation. No real money will be charged.</p>
+            </div>
+            <div class="payment-actions">
+                <button class="btn btn-secondary" id="cancelPayment">Cancel</button>
+                <button class="btn btn-primary" id="confirmPayment">Confirm Payment</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 KindleGive. Demo application - all data stored locally.</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
